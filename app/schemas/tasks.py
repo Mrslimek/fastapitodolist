@@ -11,8 +11,6 @@ class TaskBase(BaseModel):
     model_config = {
         "extra": "forbid"
     }
-    
-
 
 class TaskResponse(TaskBase):
     id: int

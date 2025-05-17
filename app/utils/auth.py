@@ -2,6 +2,7 @@ import jwt
 from passlib.hash import pbkdf2_sha256
 from app.config import settings
 from datetime import datetime, timedelta
+from uuid import uuid4
 
 
 def hash_password(password: str) -> str:
@@ -13,16 +14,17 @@ def verify_password(password: str, hashed_password: str) -> bool:
 
 
 def encode_jwt(
-    expire_minutes: int,
+    token_type: str,
+    expire_timedelta: timedelta,
     payload: dict,
     private_key=settings.PRIVATE_KEY_PATH.read_text(),
     algorithm=settings.ALGORITHM,
 ):
     to_encode = payload.copy()
     now = datetime.utcnow()
-    expire = now + timedelta(minutes=expire_minutes)
-    to_encode.update(exp=expire)
-    encoded = jwt.encode(payload, private_key, algorithm=algorithm)
+    expire = now + expire_timedelta
+    to_encode.update(exp=expire, type=token_type, jti=str(uuid4()))
+    encoded = jwt.encode(payload=to_encode, key=private_key, algorithm=algorithm)
     return encoded
 
 
@@ -33,3 +35,21 @@ def decode_jwt(
 ):
     decoded = jwt.decode(token, public_key, algorithms=[algorithm])
     return decoded
+
+
+def create_access_token(username: str):
+    jwt_payload = {"sub": username}
+    return encode_jwt(
+        payload=jwt_payload,
+        token_type=settings.ACCESS_TOKEN_TYPE,
+        expire_timedelta=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+    )
+
+
+def create_refresh_token(username: str):
+    jwt_payload = {"sub": username}
+    return encode_jwt(
+        payload=jwt_payload,
+        token_type=settings.REFRESH_TOKEN_TYPE,
+        expire_timedelta=settings.REFRESH_TOKEN_EXPIRE_DAYS,
+    )

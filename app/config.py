@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from pathlib import Path
+from datetime import timedelta
 
 
 BASE_DIR = Path(__file__).parent.parent
@@ -14,8 +15,10 @@ class Settings(BaseSettings):
     PRIVATE_KEY_PATH: Path = BASE_DIR / "certs" / "jwt-private.pem"
     PUBLIC_KEY_PATH: Path = BASE_DIR / "certs" / "jwt-public.pem"
     ALGORITHM: str = "RS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
-    REFRESH_TOKEN_EXPIRE_MONTHS: int = 1
+    ACCESS_TOKEN_TYPE: str = "access"
+    REFRESH_TOKEN_TYPE: str = "refresh"
+    ACCESS_TOKEN_EXPIRE_MINUTES: timedelta = timedelta(minutes=15)
+    REFRESH_TOKEN_EXPIRE_DAYS: timedelta = timedelta(days=30)
 
     @property
     def DATABASE_URL(self) -> str:

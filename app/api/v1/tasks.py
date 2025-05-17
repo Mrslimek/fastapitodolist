@@ -18,7 +18,7 @@ from app.db.models.users import UserORM
 router = APIRouter(prefix="/tasks")
 
 
-@router.get("", response_model=TaskResponseList)
+@router.get("/all", response_model=TaskResponseList)
 async def list_tasks(db: AsyncSession = Depends(get_db)):
     tasks_list = await get_all_tasks(db=db)
     return tasks_list
