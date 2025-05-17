@@ -1,12 +1,13 @@
-from fastapi import HTTPException, Form, status, Depends, Request
+from fastapi import HTTPException, status, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import select
+from app.utils.auth import verify_password, decode_jwt
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.db.models.auth import RevokedTokenORM
+from app.schemas.users import UserLogin
 from app.db.models.users import UserORM
 from app.db.database import get_db
-from app.utils.auth import verify_password, decode_jwt
 from app.config import settings
-from app.db.models.auth import RevokedTokenORM
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -18,16 +19,14 @@ async def get_user_by_username(username: str, db: AsyncSession) -> UserORM:
     return user_obj
 
 
-async def validate_user(
-    username: str = Form(), password: str = Form(), db: AsyncSession = Depends(get_db)
-) -> UserORM:
+async def validate_user(user_data: UserLogin, db: AsyncSession = Depends(get_db)) -> UserORM:
     unauthed_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED, detail="invalid username or password"
     )
-    user_obj = await get_user_by_username(db=db, username=username)
-    if not user_obj:
-        raise unauthed_exception
-    if not verify_password(password=password, hashed_password=user_obj.password):
+    user_obj = await get_user_by_username(db=db, username=user_data.username)
+    if not user_obj or not verify_password(
+        password=user_data.password, hashed_password=user_obj.password
+    ):
         raise unauthed_exception
     return user_obj
 
@@ -104,8 +103,4 @@ async def blacklist_access_refresh_token(db: AsyncSession, jti_tuple: tuple) -> 
 
 
 async def is_token_in_blacklist(db: AsyncSession, jti: str) -> bool:
-    token_in_db = await db.get(RevokedTokenORM, jti)
-    print(token_in_db)
-    if not token_in_db:
-        return True
-    return False
+    return await db.get(RevokedTokenORM, jti) is None

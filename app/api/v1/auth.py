@@ -19,6 +19,7 @@ router = APIRouter(prefix="/auth")
 async def issue_refresh_access_tokens(
     response: Response, user_obj: UserORM = Depends(validate_user)
 ):
+    """Not using 'secure=True' flag when setting refresh token cookie, because dev server"""
     access_token = create_access_token(username=user_obj.username)
     refresh_token = create_refresh_token(username=user_obj.username)
     response.set_cookie(key="refresh", value=refresh_token, httponly=True, samesite="lax")
