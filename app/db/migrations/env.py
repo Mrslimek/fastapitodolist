@@ -7,6 +7,7 @@ from alembic import context
 
 from app.db.models.users import UserORM  # noqa
 from app.db.models.tasks import TaskORM  # noqa
+from app.db.models.auth import RevokedTokenORM  # noqa
 from app.db.database import Base
 from app.config import settings
 
