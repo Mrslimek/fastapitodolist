@@ -1,8 +1,9 @@
 import jwt
 from passlib.hash import pbkdf2_sha256
 from app.config import settings
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from uuid import uuid4
+from app.utils.exceptions import CustomDecodeError
 
 
 def hash_password(password: str) -> str:
@@ -21,7 +22,7 @@ def encode_jwt(
     algorithm=settings.ALGORITHM,
 ):
     to_encode = payload.copy()
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)    
     expire = now + expire_timedelta
     to_encode.update(exp=expire, type=token_type, jti=str(uuid4()))
     encoded = jwt.encode(payload=to_encode, key=private_key, algorithm=algorithm)
@@ -33,7 +34,10 @@ def decode_jwt(
     public_key: str = settings.PUBLIC_KEY_PATH.read_text(),
     algorithm: str = settings.ALGORITHM,
 ):
-    decoded = jwt.decode(token, public_key, algorithms=[algorithm])
+    try:
+        decoded = jwt.decode(token, public_key, algorithms=[algorithm])
+    except (jwt.DecodeError, jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        raise CustomDecodeError()
     return decoded
 
 

@@ -1,14 +1,10 @@
 from pydantic import BaseModel
+from app.utils.schemas import NonEmptyString, PwdStr
 
 
 class UserBase(BaseModel):
-    username: str
-    # TODO: Не меньше 6 символов
-    password: str
-    first_name: str
-    last_name: str | None = None
+    username: NonEmptyString
+    password: PwdStr
+    first_name: NonEmptyString
+    last_name: NonEmptyString | None = None
     
-
-class UserLogin(BaseModel):
-    username: str
-    password: str

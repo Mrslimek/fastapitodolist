@@ -10,7 +10,7 @@ class TaskORM(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     title: Mapped[str] = mapped_column(String, name="Title")
-    description: Mapped[str] = mapped_column(Text, name="Description")
+    description: Mapped[str] = mapped_column(Text, name="Description", nullable=True)
     status: Mapped[TaskStatus] = mapped_column(
         Enum(TaskStatus, values_callable=get_enum_values, name="task_status"),
         default=TaskStatus.NEW,

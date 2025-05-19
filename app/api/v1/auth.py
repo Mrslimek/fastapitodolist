@@ -32,7 +32,7 @@ async def refresh_access_token(user_obj: UserORM = Depends(validate_refresh_toke
     return AccessTokenSchema(access_token=access_token)
 
 
-@router.get("/logout")
+@router.post("/logout")
 async def logout_user(
     jti_tuple: tuple = Depends(get_access_refresh_tokens_jti), db: AsyncSession = Depends(get_db)
 ):
