@@ -1,0 +1,67 @@
+# FastAPI Todo List - Test Assignment
+
+This repository is a test assignment implementing a Todo List API using FastAPI.
+
+## Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Mrslimek/fastapitodolist.git
+   ```
+2. **Change directory:**
+   ```bash
+   cd fastapitodolist
+   ```
+3. **Create and activate a virtual environment using the uv package manager:**
+   ```bash
+   uv init
+   ```
+4. **Install dependencies using uv:**
+   ```bash
+   uv sync
+   ```
+5. **Create a `.env` file in the root directory and add the following production environment variables:\*\*
+
+   ```dotenv
+   PG_USER = your_pg_user
+   PG_PASSWORD = your_pg_password
+   PG_DB = your_pg_db
+   PG_HOST = your_pg_host
+   PG_PORT = your_pg_port
+   ```
+
+6. **Create a directory named `certs` in the root directory.**
+
+7. **Generate the JWT RSA keys inside the `certs` directory using the following commands:**
+   ```bash
+   openssl genrsa -out jwt-private.pem 2048
+   openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
+   ```
+
+## Running the Application
+
+Start the application with:
+```bash
+uv run uvicorn app.main:app --reload
+```
+
+## API Documentation
+
+After starting the server, access the interactive API documentation at:
+- `http://localhost:8000/docs`
+- `http://localhost:8000/redoc`
+
+
+## Running the Application
+
+Start the application with:
+```bash
+uv run uvicorn app.main:app --reload
+```
+
+## API Documentation
+
+After starting the server, access the interactive API documentation at:
+
+- `http://localhost:8000/docs`
+- `http://localhost:8000/redoc`
