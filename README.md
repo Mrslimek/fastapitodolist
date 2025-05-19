@@ -25,6 +25,9 @@ This repository is a test assignment implementing a Todo List API using FastAPI.
    PG_PORT = your_pg_port
    ```
 5. **Create a directory named `certs` in the root directory.**
+	```
+	mkdir certs
+	```
 6. **Change directory:**
 	```bash
 	cd certs
