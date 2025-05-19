@@ -37,7 +37,11 @@ This repository is a test assignment implementing a Todo List API using FastAPI.
    openssl genrsa -out jwt-private.pem 2048
    openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
    ```
-8. **Make migrations with the following command:**
+8. **Return to the root directory:**
+	```bash
+	cd ..
+	```
+9. **Make migrations with the following command (ensure that you have your db server running):**
 	```bash
 	uv run alembic revision --autogenerate -m "init migration"
 	uv run alembic upgrade head
