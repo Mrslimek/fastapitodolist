@@ -1,0 +1,6 @@
+.env
+certs
+.venv
+tests
+.gitignore
+.git
