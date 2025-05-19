@@ -2,7 +2,7 @@
 
 This repository is a test assignment implementing a Todo List API using FastAPI.
 
-## Installation
+## Installation in virtual environment
 
 1. **Clone the repository:**
    ```bash
@@ -70,3 +70,36 @@ After starting the server, access the interactive API documentation at:
 
 - `http://localhost:8000/docs`
 - `http://localhost:8000/redoc`
+
+## Running the Application in Docker
+
+To run the application inside a container:
+
+1. **Ensure Docker and Docker Compose are installed.**
+2. **Create the `.env` file in the root directory:**
+   ```dotenv
+   PG_USER=your_pg_user
+   PG_PASSWORD=your_pg_password
+   PG_DB=your_pg_db
+   PG_HOST=db
+   PG_PORT=5432
+   ```
+3. **Create a directory named `certs` in the root directory and generate RSA keys:**
+   ```bash
+   mkdir certs
+   cd certs
+   openssl genrsa -out jwt-private.pem 2048
+   openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
+   ```
+4. **Build and start the Docker containers:**
+   ```bash
+   docker compose up --build
+   ```
+
+## API Documentation
+
+After starting the server, access the interactive API documentation at:
+
+- `http://localhost:8000/docs`
+- `http://localhost:8000/redoc`
+```
