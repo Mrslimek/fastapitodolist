@@ -12,16 +12,11 @@ This repository is a test assignment implementing a Todo List API using FastAPI.
    ```bash
    cd fastapitodolist
    ```
-3. **Create and activate a virtual environment using the uv package manager:**
-   ```bash
-   uv init
-   ```
-4. **Install dependencies using uv:**
+3. **Create, activate virtual environment and install dependencies using the uv package manager:**
    ```bash
    uv sync
    ```
-5. **Create a `.env` file in the root directory and add the following production environment variables:\*\*
-
+4. **Create `.env` file in the root directory and add the following environment variables:**
    ```dotenv
    PG_USER = your_pg_user
    PG_PASSWORD = your_pg_password
@@ -29,14 +24,21 @@ This repository is a test assignment implementing a Todo List API using FastAPI.
    PG_HOST = your_pg_host
    PG_PORT = your_pg_port
    ```
-
-6. **Create a directory named `certs` in the root directory.**
-
+5. **Create a directory named `certs` in the root directory.**
+6. **Change directory:**
+	```bash
+	cd certs
+	```
 7. **Generate the JWT RSA keys inside the `certs` directory using the following commands:**
    ```bash
    openssl genrsa -out jwt-private.pem 2048
    openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
    ```
+8. **Make migrations with the following command:**
+	```bash
+	uv run alembic revision --autogenerate -m "init migration"
+	uv run alembic upgrade head
+	```
 
 ## Running the Application
 
