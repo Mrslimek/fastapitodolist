@@ -1,5 +1,6 @@
 from fastapi import Depends, APIRouter, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi_pagination import paginate
 from app.schemas.tasks import TaskResponseList, TaskResponse, TaskBase, TaskPartialUpdate
 from app.db.models.users import UserORM
 from app.db.database import get_db
@@ -17,21 +18,22 @@ from app.services.tasks import (
 )
 from app.utils.enums import TaskStatus
 from app.utils.exceptions import RecordNotFound
+from app.utils.pagination import Page
 
 
 router = APIRouter(prefix="/tasks")
 
 
-@router.get("/all", response_model=TaskResponseList)
+@router.get("/all", response_model=Page[TaskResponse])
 async def list_tasks(
     db: AsyncSession = Depends(get_db), user_obj: UserORM = Depends(get_current_user)
 ):
     """
     According to the tech task here we should accept only authorized clients
-    but return all tasks from db
+    but return all tasks from db paginated
     """
     tasks_list = await get_all_tasks(db=db)
-    return tasks_list
+    return paginate(tasks_list)
 
 
 @router.get("/{task_id}", response_model=TaskResponse)
@@ -46,7 +48,7 @@ async def retrieve_task(
     return task_obj
 
 
-@router.get("", response_model=TaskResponseList)
+@router.get("", response_model=Page[TaskResponse])
 async def list_user_tasks(
     db: AsyncSession = Depends(get_db), user_obj: UserORM = Depends(get_current_user)
 ):
@@ -55,7 +57,7 @@ async def list_user_tasks(
     but return only tasks linked to exact user
     """
     tasks_list = await get_all_user_tasks(db=db, user_id=user_obj.id)
-    return tasks_list
+    return paginate(tasks_list)
 
 
 @router.post("", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)

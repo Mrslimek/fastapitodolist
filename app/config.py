@@ -1,6 +1,10 @@
 from pydantic_settings import BaseSettings
 from pathlib import Path
 from datetime import timedelta
+from fastapi_pagination.utils import disable_installed_extensions_check  # noqa
+
+
+disable_installed_extensions_check()
 
 
 BASE_DIR = Path(__file__).parent.parent

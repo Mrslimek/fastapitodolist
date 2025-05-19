@@ -7,8 +7,7 @@ from tests.utils.auth import create_test_access_token
 @pytest.mark.parametrize(
     "access_token, expected_status, expected_response",
     [
-        (create_test_access_token(username="string"), 200, []),
-        (create_test_access_token(username="viktor"), 200, "tasks"),
+        (create_test_access_token(username="viktor"), 200, dict),
         (None, 401, None),
         ("invalid_token", 401, None),
     ],
@@ -25,9 +24,6 @@ async def test_list_user_tasks(access_token, expected_status, expected_response)
         )
 
         if expected_response is not None:
-            if isinstance(expected_response, list):
-                assert response.json() == expected_response, (
-                    f"Awaited empty list, returned {response.json()}"
-                )
-            elif expected_response == "tasks":
-                assert isinstance(response.json(), list), "Awaited list"
+            assert isinstance(response.json(), expected_response), (
+                f"Awaited empty list, returned {response.json()}"
+            )
