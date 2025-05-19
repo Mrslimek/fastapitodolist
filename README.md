@@ -56,21 +56,6 @@ After starting the server, access the interactive API documentation at:
 - `http://localhost:8000/docs`
 - `http://localhost:8000/redoc`
 
-
-## Running the Application
-
-Start the application with:
-```bash
-uv run uvicorn app.main:app --reload
-```
-
-## API Documentation
-
-After starting the server, access the interactive API documentation at:
-
-- `http://localhost:8000/docs`
-- `http://localhost:8000/redoc`
-
 ## Running the Application in Docker
 
 To run the application inside a container:
